@@ -1,0 +1,21 @@
+# Terraform working directory — generated on terraform init, never commit
+.terraform/
+
+# Local state files — we use remote state in S3
+*.tfstate
+*.tfstate.backup
+
+# Terraform plan output files (can contain sensitive resource data)
+*.tfplan
+
+# Crash logs
+crash.log
+crash.*.log
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
+*.swo
