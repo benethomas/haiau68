@@ -146,17 +146,24 @@ resource "aws_iam_policy" "github_actions" {
         Resource = "*"
       },
       {
-        Sid    = "Route53"
+        Sid    = "Route53ListZones"
         Effect = "Allow"
         Action = [
           "route53:GetHostedZone",
           "route53:ListHostedZones",
           "route53:ListHostedZonesByName",
           "route53:ListResourceRecordSets",
-          "route53:ChangeResourceRecordSets",
           "route53:GetChange"
         ]
         Resource = "*"
+      },
+      {
+        Sid    = "Route53ChangeRecords"
+        Effect = "Allow"
+        Action = [
+          "route53:ChangeResourceRecordSets"
+        ]
+        Resource = "arn:aws:route53:::hostedzone/Z10252333CGP9076UYVK0"
       },
       {
         Sid    = "ACM"
