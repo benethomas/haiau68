@@ -69,32 +69,119 @@ resource "aws_iam_role" "github_actions_prod" {
   }
 }
 
-# Permissions — same for both roles
-# Note: broad managed policies for learning. In production these would be
-# tightly scoped custom policies listing only the specific actions needed
-locals {
-  github_actions_roles = [
-    aws_iam_role.github_actions_dev.name,
-    aws_iam_role.github_actions_prod.name
-  ]
+resource "aws_iam_policy" "github_actions" {
+  name        = "github-actions-haiau68-policy"
+  description = "Scoped permissions for haiau68 GitHub Actions deployments"
 
-  managed_policies = [
-    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
-    "arn:aws:iam::aws:policy/CloudFrontFullAccess",
-    "arn:aws:iam::aws:policy/AmazonRoute53FullAccess",
-    "arn:aws:iam::aws:policy/AWSCertificateManagerFullAccess"
-  ]
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "TerraformState"
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ]
+        Resource = "arn:aws:s3:::haiau68-terraform-state-128104558019/haiau68/*"
+      },
+      {
+        Sid      = "TerraformStateList"
+        Effect   = "Allow"
+        Action   = "s3:ListBucket"
+        Resource = "arn:aws:s3:::haiau68-terraform-state-128104558019"
+      },
+      {
+        Sid    = "WebsiteBuckets"
+        Effect = "Allow"
+        Action = [
+          "s3:CreateBucket",
+          "s3:DeleteBucket",
+          "s3:ListBucket",
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:GetBucketPolicy",
+          "s3:PutBucketPolicy",
+          "s3:DeleteBucketPolicy",
+          "s3:GetBucketVersioning",
+          "s3:PutBucketVersioning",
+          "s3:GetBucketPublicAccessBlock",
+          "s3:PutBucketPublicAccessBlock",
+          "s3:GetEncryptionConfiguration",
+          "s3:PutEncryptionConfiguration",
+          "s3:GetBucketLocation",
+          "s3:GetBucketAcl",
+          "s3:GetBucketTagging",
+          "s3:PutBucketTagging"
+        ]
+        Resource = [
+          "arn:aws:s3:::haiau68-website-*",
+          "arn:aws:s3:::haiau68-website-*/*"
+        ]
+      },
+      {
+        Sid    = "CloudFront"
+        Effect = "Allow"
+        Action = [
+          "cloudfront:CreateDistribution",
+          "cloudfront:UpdateDistribution",
+          "cloudfront:DeleteDistribution",
+          "cloudfront:GetDistribution",
+          "cloudfront:GetDistributionConfig",
+          "cloudfront:ListDistributions",
+          "cloudfront:CreateOriginAccessControl",
+          "cloudfront:UpdateOriginAccessControl",
+          "cloudfront:DeleteOriginAccessControl",
+          "cloudfront:GetOriginAccessControl",
+          "cloudfront:GetOriginAccessControlConfig",
+          "cloudfront:ListOriginAccessControls",
+          "cloudfront:CreateInvalidation",
+          "cloudfront:GetInvalidation",
+          "cloudfront:ListInvalidations",
+          "cloudfront:TagResource",
+          "cloudfront:ListTagsForResource"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "Route53"
+        Effect = "Allow"
+        Action = [
+          "route53:GetHostedZone",
+          "route53:ListHostedZones",
+          "route53:ListHostedZonesByName",
+          "route53:ListResourceRecordSets",
+          "route53:ChangeResourceRecordSets",
+          "route53:GetChange"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "ACM"
+        Effect = "Allow"
+        Action = [
+          "acm:RequestCertificate",
+          "acm:DescribeCertificate",
+          "acm:ListCertificates",
+          "acm:DeleteCertificate",
+          "acm:AddTagsToCertificate",
+          "acm:ListTagsForCertificate",
+          "acm:GetCertificate"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
 }
 
-resource "aws_iam_role_policy_attachment" "github_actions" {
-  for_each = {
-    for pair in setproduct(local.github_actions_roles, local.managed_policies) :
-    "${pair[0]}-${pair[1]}" => {
-      role   = pair[0]
-      policy = pair[1]
-    }
-  }
+resource "aws_iam_role_policy_attachment" "github_actions_dev" {
+  role       = aws_iam_role.github_actions_dev.name
+  policy_arn = aws_iam_policy.github_actions.arn
+}
 
-  role       = each.value.role
-  policy_arn = each.value.policy
+resource "aws_iam_role_policy_attachment" "github_actions_prod" {
+  role       = aws_iam_role.github_actions_prod.name
+  policy_arn = aws_iam_policy.github_actions.arn
 }
