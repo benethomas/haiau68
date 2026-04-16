@@ -75,11 +75,11 @@ jobs:
         run: terraform init
 
       - name: Terraform Format Check
-        working-directory: terraform/environments/dev
+        working-directory: terraform/environments/prod
         run: terraform fmt -check -recursive
 
       - name: Terraform Validate
-        working-directory: terraform/environments/dev
+        working-directory: terraform/environments/prod
         run: terraform validate        
 
       - name: Terraform Plan
