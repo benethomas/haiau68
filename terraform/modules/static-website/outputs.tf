@@ -12,3 +12,8 @@ output "cloudfront_domain_name" {
   description = "CloudFront distribution domain name"
   value       = aws_cloudfront_distribution.website.domain_name
 }
+
+output "website_url" {
+  description = "Live website URL"
+  value       = "https://${var.domain_name}"
+}

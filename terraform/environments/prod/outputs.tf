@@ -9,3 +9,7 @@ output "cloudfront_distribution_id" {
 output "cloudfront_domain_name" {
   value = module.static_website.cloudfront_domain_name
 }
+
+output "website_url" {
+  value = module.static_website.website_url
+}

@@ -18,3 +18,9 @@ variable "aws_region" {
   type        = string
   default     = "ap-southeast-1"
 }
+
+variable "hosted_zone_name" {
+  description = "Root Route53 hosted zone name"
+  type        = string
+  default     = "haiau68.com"
+}
