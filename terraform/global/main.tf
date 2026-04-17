@@ -210,3 +210,19 @@ resource "aws_budgets_budget" "monthly" {
     subscriber_email_addresses = ["var.alert_email"]
   }
 }
+
+resource "aws_dynamodb_table" "terraform_state_lock" {
+  name         = "haiau68-terraform-state-lock"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+
+  tags = {
+    Project = "haiau68"
+    Purpose = "terraform-state-locking"
+  }
+}
