@@ -107,7 +107,8 @@ resource "aws_iam_policy" "github_actions" {
           "s3:PutBucketVersioning",
           "s3:PutBucketPublicAccessBlock",
           "s3:PutEncryptionConfiguration",
-          "s3:PutBucketTagging"
+          "s3:PutBucketTagging",
+          "s3:PutLifecycleConfiguration"
         ]
         Resource = [
           "arn:aws:s3:::haiau68-website-*",
