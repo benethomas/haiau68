@@ -45,11 +45,11 @@ jobs:
 
       - name: Terraform Plan
         working-directory: terraform/environments/dev
-        run: terraform plan -out tf.plan
+        run: terraform plan -out tf.tfplan
 
       - name: Terraform Apply
         working-directory: terraform/environments/dev
-        run: terraform apply tf.plan
+        run: terraform apply tf.tfplan
 
   deploy-prod:
     name: Deploy Prod Infrastructure
@@ -84,8 +84,8 @@ jobs:
 
       - name: Terraform Plan
         working-directory: terraform/environments/prod
-        run: terraform plan -out tf.plan
+        run: terraform plan -out tf.tfplan
 
       - name: Terraform Apply
         working-directory: terraform/environments/prod
-        run: terraform apply tf.plan
+        run: terraform apply tf.tfplan
