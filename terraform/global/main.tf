@@ -137,7 +137,9 @@ resource "aws_iam_policy" "github_actions" {
           "cloudfront:TagResource",
           "cloudfront:ListTagsForResource",
           "cloudfront:CreateResponseHeadersPolicy",
-          "cloudfront:GetResponseHeadersPolicy"
+          "cloudfront:GetResponseHeadersPolicy",
+          "cloudfront:UpdateResponseHeadersPolicy",
+          "cloudfront:DeleteResponseHeadersPolicy"
         ]
         Resource = "*"
       },
