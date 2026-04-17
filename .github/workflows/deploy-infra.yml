@@ -33,7 +33,7 @@ jobs:
 
       - name: Terraform Init
         working-directory: terraform/environments/dev
-        run: terraform init
+        run: terraform init -reconfigure -input=false
 
       - name: Terraform Format Check
         working-directory: terraform/environments/dev
@@ -72,7 +72,7 @@ jobs:
 
       - name: Terraform Init
         working-directory: terraform/environments/prod
-        run: terraform init
+        run: terraform init -reconfigure -input=false
 
       - name: Terraform Format Check
         working-directory: terraform/environments/prod
