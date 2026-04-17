@@ -109,6 +109,35 @@ resource "aws_cloudfront_origin_access_control" "website" {
   signing_protocol                  = "sigv4"
 }
 
+resource "aws_cloudfront_response_headers_policy" "website" {
+  name = "haiau68-${var.environment}-security-headers"
+
+  security_headers_config {
+    strict_transport_security {
+      access_control_max_age_sec = 31536000 # 1 year
+      include_subdomains         = true
+      preload                    = true
+      override                   = true
+    }
+    content_type_options {
+      override = true # sets X-Content-Type-Options: nosniff
+    }
+    frame_options {
+      frame_option = "DENY"
+      override     = true
+    }
+    referrer_policy {
+      referrer_policy = "strict-origin-when-cross-origin"
+      override        = true
+    }
+    xss_protection {
+      mode_block = true
+      protection = true
+      override   = true
+    }
+  }
+}
+
 resource "aws_cloudfront_distribution" "website" {
   enabled             = true
   is_ipv6_enabled     = true
@@ -128,6 +157,8 @@ resource "aws_cloudfront_distribution" "website" {
     target_origin_id       = "S3-haiau68-${var.environment}"
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
+
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.website.id
 
     # AWS managed CachingOptimized policy — recommended for S3 static site origins
     cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6"

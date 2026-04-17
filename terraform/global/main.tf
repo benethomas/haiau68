@@ -135,7 +135,9 @@ resource "aws_iam_policy" "github_actions" {
           "cloudfront:GetInvalidation",
           "cloudfront:ListInvalidations",
           "cloudfront:TagResource",
-          "cloudfront:ListTagsForResource"
+          "cloudfront:ListTagsForResource",
+          "cloudfront:CreateResponseHeadersPolicy",
+          "cloudfront:GetResponseHeadersPolicy"
         ]
         Resource = "*"
       },
