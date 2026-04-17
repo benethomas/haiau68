@@ -136,6 +136,18 @@ resource "aws_cloudfront_response_headers_policy" "website" {
       override   = true
     }
   }
+  custom_headers_config {
+    items {
+      header   = "Content-Security-Policy"
+      value    = "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
+      override = true
+    }
+    items {
+      header   = "Permissions-Policy"
+      value    = "camera=(), microphone=(), geolocation=()"
+      override = true
+    }
+  }
 }
 
 resource "aws_cloudfront_distribution" "website" {
