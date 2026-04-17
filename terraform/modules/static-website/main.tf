@@ -45,6 +45,22 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "website" {
   }
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "website" {
+  bucket = aws_s3_bucket.website.id
+
+  rule {
+    id     = "expire-noncurrent-versions-after-30-days"
+    status = "Enabled"
+    filter {}
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
+    expiration {
+      expired_object_delete_marker = true
+    }
+  }
+}
+
 resource "aws_s3_bucket_policy" "website" {
   bucket = aws_s3_bucket.website.id
 
