@@ -186,3 +186,27 @@ resource "aws_iam_role_policy_attachment" "github_actions_prod" {
   role       = aws_iam_role.github_actions_prod.name
   policy_arn = aws_iam_policy.github_actions.arn
 }
+
+resource "aws_budgets_budget" "monthly" {
+  name         = "haiau68-monthly-budget"
+  budget_type  = "COST"
+  limit_amount = "10"
+  limit_unit   = "USD"
+  time_unit    = "MONTHLY"
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 85
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "ACTUAL"
+    subscriber_email_addresses = ["var.alert_email"]
+  }
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 100
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "ACTUAL"
+    subscriber_email_addresses = ["var.alert_email"]
+  }
+}
