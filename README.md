@@ -20,9 +20,12 @@ Terraform · AWS (S3, CloudFront, ACM, Route53) · GitHub Actions · OIDC
 ## Repo Structure
 
 ```
-├── .github/workflows/
-│   ├── deploy-infra.yml    # runs on terraform/ changes
-│   └── deploy-site.yml     # runs on website/ changes
+├── .github/
+│   ├── workflows/
+│   │   ├── deploy-infra.yml   # runs on terraform/ changes
+│   │   ├── deploy-site.yml    # runs on website/ changes
+│   │   └── validate.yml       # fmt + validate on PRs
+│   └── dependabot.yml         # weekly dependency updates
 ├── terraform/
 │   ├── environments/dev/   # dev.haiau68.com
 │   ├── environments/prod/  # haiau68.com
@@ -39,6 +42,12 @@ Terraform · AWS (S3, CloudFront, ACM, Route53) · GitHub Actions · OIDC
 | prod | https://haiau68.com | Manual approval required |
 
 GitHub Actions authenticates to AWS via OIDC federation — no stored secrets. Separate IAM roles per environment restrict which workflows can deploy where.
+
+## Automation
+
+Pull requests run `validate.yml` (Terraform fmt + validate) before merge. `main` is protected — all changes go through a PR.
+
+Dependabot opens weekly PRs for GitHub Actions and the Terraform AWS provider, grouped so related bumps land together. Major provider upgrades arrive as individual PRs for manual review.
 
 ## Initial Setup
 
