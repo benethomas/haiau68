@@ -23,4 +23,18 @@ jobs:
         working-directory: terraform/environments/dev
         run: |
           terraform init -backend=false
-          terraform validate    
+          terraform validate
+
+  checkov:
+    name: Checkov IaC Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      # The official checkov-action pins an ancient checkov image (2.0.930) with
+      # no version override, which misses cross-resource linking. Run a pinned
+      # modern image directly so CI matches local scans.
+      - name: Run Checkov
+        run: |
+          docker run --rm -v "${{ github.workspace }}/terraform:/tf" \
+            bridgecrew/checkov:3.3.8 --directory /tf --framework terraform --quiet --compact
