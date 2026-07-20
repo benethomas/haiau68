@@ -31,9 +31,10 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
+      # The official checkov-action pins an ancient checkov image (2.0.930) with
+      # no version override, which misses cross-resource linking. Run a pinned
+      # modern image directly so CI matches local scans.
       - name: Run Checkov
-        uses: bridgecrewio/checkov-action@99bb2caf247dfd9f03cf984373bc6043d4e32ebf # v12.1347.0
-        with:
-          directory: terraform
-          framework: terraform
-          quiet: true
+        run: |
+          docker run --rm -v "${{ github.workspace }}/terraform:/tf" \
+            bridgecrew/checkov:3.3.8 --directory /tf --framework terraform --quiet --compact
