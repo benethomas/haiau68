@@ -23,4 +23,17 @@ jobs:
         working-directory: terraform/environments/dev
         run: |
           terraform init -backend=false
-          terraform validate    
+          terraform validate
+
+  checkov:
+    name: Checkov IaC Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@99bb2caf247dfd9f03cf984373bc6043d4e32ebf # v12.1347.0
+        with:
+          directory: terraform
+          framework: terraform
+          quiet: true
