@@ -11,6 +11,13 @@ permissions:
   id-token: write
   contents: read
 
+# Serialize site deploys. cancel-in-progress is true so a newer push supersedes
+# an older in-flight sync — avoids an older `s3 sync --delete` finishing last and
+# reverting newer content.
+concurrency:
+  group: deploy-site-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy-dev:
     name: Deploy to Dev
