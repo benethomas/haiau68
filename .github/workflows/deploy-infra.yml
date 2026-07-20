@@ -12,6 +12,13 @@ permissions:
   id-token: write
   contents: read
 
+# Serialize infra deploys — never run two applies against the same state at once.
+# cancel-in-progress is false so an in-flight apply is never interrupted; a newer
+# push queues behind it instead.
+concurrency:
+  group: deploy-infra-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   deploy-dev:
     name: Deploy Dev Infrastructure
