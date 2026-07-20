@@ -70,6 +70,8 @@ resource "aws_iam_role" "github_actions_prod" {
 }
 
 resource "aws_iam_policy" "github_actions" {
+  #checkov:skip=CKV_AWS_290:CloudFront and ACM actions require Resource=* (no ARN-level support); all other statements are resource-scoped
+  #checkov:skip=CKV_AWS_355:Same — CloudFront/ACM lack resource-level ARNs; S3 and Route53 statements are scoped to specific resources
   name        = "github-actions-haiau68-policy"
   description = "Scoped permissions for haiau68 GitHub Actions deployments"
 

@@ -9,6 +9,10 @@ terraform {
 }
 
 resource "aws_s3_bucket" "website" {
+  #checkov:skip=CKV_AWS_18:Users reach content via CloudFront+OAC, not S3 directly; logging deferred pre-launch
+  #checkov:skip=CKV_AWS_145:Website content is public; SSE-S3 (AES256) is sufficient and KMS adds cost
+  #checkov:skip=CKV_AWS_144:Cross-region replication unnecessary and cost-prohibitive for a static site
+  #checkov:skip=CKV2_AWS_62:No event-notification consumer for this bucket
   bucket = "haiau68-website-${var.environment}"
 
   tags = {
@@ -160,6 +164,11 @@ resource "aws_cloudfront_response_headers_policy" "website" {
 }
 
 resource "aws_cloudfront_distribution" "website" {
+  #checkov:skip=CKV_AWS_86:Access logging deferred pre-launch to avoid S3 log storage cost
+  #checkov:skip=CKV_AWS_374:Global marketing site — geo restriction is not desired
+  #checkov:skip=CKV_AWS_310:Single S3 origin by design; origin failover unnecessary for a static site
+  #checkov:skip=CKV_AWS_68:WAF intentionally omitted — cost outweighs value for a low-traffic static site
+  #checkov:skip=CKV2_AWS_47:No WAF attached (see CKV_AWS_68); a static S3 site has no Log4j attack surface
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"

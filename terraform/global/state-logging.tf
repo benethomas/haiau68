@@ -1,4 +1,9 @@
 resource "aws_s3_bucket" "state_logs" {
+  #checkov:skip=CKV_AWS_18:This is itself the access-log bucket — logging it would be circular
+  #checkov:skip=CKV_AWS_21:Access logs are write-once and expire after 30 days; versioning would only double storage cost
+  #checkov:skip=CKV_AWS_145:Access logs aren't sensitive; SSE-S3 (AES256) is sufficient, KMS adds cost
+  #checkov:skip=CKV_AWS_144:Cross-region replication unnecessary for 30-day-retained access logs
+  #checkov:skip=CKV2_AWS_62:No event-notification consumer for this bucket
   bucket = "haiau68-terraform-state-logs-128104558019"
 }
 
