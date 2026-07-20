@@ -4,7 +4,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      
+    groups:
+      github-actions:
+        patterns:
+          - "*"      
+
   - package-ecosystem: "terraform"
     directories:
       - "/terraform/global"
@@ -14,3 +18,10 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    groups:
+      aws-provider:
+        patterns:
+          - "hashicorp/aws"
+        update-types:
+          - "minor"
+          - "patch"    
