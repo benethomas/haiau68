@@ -59,7 +59,8 @@ Dependabot opens weekly PRs for GitHub Actions and the Terraform AWS provider, g
 - **Private origin** — the S3 bucket is fully private (public access blocked); CloudFront reaches it via Origin Access Control, and bucket policies deny non-TLS access.
 - **Encryption at rest** — all buckets use SSE-S3; the website and state buckets are versioned, and the state bucket has access logging plus lifecycle expiry of old versions.
 - **Response headers** — CloudFront serves HSTS, a Content-Security-Policy, X-Content-Type-Options, frame-deny, and a Permissions-Policy.
-- **IaC scanning** — Checkov runs on every PR; non-applicable findings are suppressed inline with documented justifications.
+- **IaC scanning** — Checkov runs on every PR (including a custom policy requiring `Service` + a valid `Environment` tag on all taggable resources); non-applicable findings are suppressed inline with documented justifications.
+- **Tagging** — common tags (`Project`, `Service`, `Environment`, `ManagedBy`) are defined per-stack in `locals.common_tags` and applied through the module's `tags` variable. `Environment` is capitalized (`Dev`/`Prod`/`Shared`) for FinOps tags, while `var.environment` stays lowercase for resource names.
 - **Supply chain** — Actions are pinned to commit SHAs; GitHub secret scanning, push protection, and Dependabot security alerts are all enabled.
 
 ## Initial Setup
