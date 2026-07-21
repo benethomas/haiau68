@@ -7,6 +7,8 @@
 
 # Terraform plan output files (can contain sensitive resource data)
 *.tfplan
+# Catch mis-named plan files (standard is *.tfplan)
+tf.plan
 
 # Crash logs
 crash.log
