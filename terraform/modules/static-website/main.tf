@@ -15,10 +15,7 @@ resource "aws_s3_bucket" "website" {
   #checkov:skip=CKV2_AWS_62:No event-notification consumer for this bucket
   bucket = "haiau68-website-${var.environment}"
 
-  tags = {
-    Project     = "haiau68"
-    Environment = var.environment
-  }
+  tags = var.tags
 }
 
 resource "aws_s3_bucket_public_access_block" "website" {
@@ -213,10 +210,7 @@ resource "aws_cloudfront_distribution" "website" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
-  tags = {
-    Project     = "haiau68"
-    Environment = var.environment
-  }
+  tags = var.tags
 }
 
 # Look up the existing hosted zone created when the domain was registered
@@ -237,10 +231,7 @@ resource "aws_acm_certificate" "website" {
     create_before_destroy = true
   }
 
-  tags = {
-    Project     = "haiau68"
-    Environment = var.environment
-  }
+  tags = var.tags
 }
 
 # Terraform creates the DNS validation records in Route53 automatically

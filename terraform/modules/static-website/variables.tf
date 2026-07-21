@@ -24,3 +24,8 @@ variable "hosted_zone_name" {
   type        = string
   default     = "haiau68.com"
 }
+
+variable "tags" {
+  description = "Common tags applied to all taggable resources"
+  type        = map(string)
+}

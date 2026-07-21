@@ -1,3 +1,12 @@
+locals {
+  common_tags = {
+    Project     = "haiau68"
+    Service     = "website"
+    Environment = "Shared"
+    ManagedBy   = "terraform"
+  }
+}
+
 # OIDC provider — one per AWS account, shared across all environments.
 # thumbprint_list is intentionally omitted: AWS validates the GitHub Actions
 # IdP against its own trusted root CAs and ignores the thumbprint for this
@@ -31,10 +40,7 @@ resource "aws_iam_role" "github_actions_dev" {
     ]
   })
 
-  tags = {
-    Project     = "haiau68"
-    Environment = "dev"
-  }
+  tags = local.common_tags
 }
 
 # Prod role — can only be assumed from the production GitHub Actions environment
@@ -61,10 +67,7 @@ resource "aws_iam_role" "github_actions_prod" {
     ]
   })
 
-  tags = {
-    Project     = "haiau68"
-    Environment = "prod"
-  }
+  tags = local.common_tags
 }
 
 resource "aws_iam_policy" "github_actions" {

@@ -40,6 +40,9 @@ jobs:
       # modern image directly so CI matches local scans.
       - name: Run Checkov
         run: |
-          docker run --rm -v "${{ github.workspace }}/terraform:/tf" \
+          docker run --rm \
+            -v "${{ github.workspace }}/terraform:/tf" \
+            -v "${{ github.workspace }}/.checkov:/checks" \
             bridgecrew/checkov:3.3.8@sha256:c64ffb6d6fc8087c896341a2c697770a04a1cf558db04fa7b8129d8ca6bce336 \
-            --directory /tf --framework terraform --quiet --compact
+            --directory /tf --external-checks-dir /checks \
+            --framework terraform --quiet --compact

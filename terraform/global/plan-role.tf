@@ -29,10 +29,7 @@ resource "aws_iam_role" "github_actions_plan" {
     ]
   })
 
-  tags = {
-    Project     = "haiau68"
-    Environment = "ci"
-  }
+  tags = local.common_tags
 }
 
 resource "aws_iam_role_policy" "plan_read" {
