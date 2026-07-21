@@ -55,12 +55,26 @@ resource "aws_iam_role_policy" "plan_read" {
         Resource = "arn:aws:s3:::haiau68-terraform-state-128104558019"
       },
       {
-        #checkov:skip=CKV_AWS_355:Read-only Describe/Get/List actions have no resource-level ARN support; this role cannot mutate anything
-        Sid    = "ResourceRead"
+        # Bucket-CONFIG reads only (no s3:GetObject), scoped to the website
+        # buckets. Object contents are never needed to refresh a plan; the only
+        # object read is state, handled by the scoped "StateRead" statement above.
+        Sid    = "S3ConfigRead"
         Effect = "Allow"
         Action = [
-          "s3:Get*",
-          "s3:List*",
+          "s3:GetBucket*",
+          "s3:GetEncryptionConfiguration",
+          "s3:GetLifecycleConfiguration",
+          "s3:GetReplicationConfiguration",
+          "s3:GetAccelerateConfiguration",
+          "s3:ListBucket"
+        ]
+        Resource = "arn:aws:s3:::haiau68-website-*"
+      },
+      {
+        #checkov:skip=CKV_AWS_355:CloudFront/ACM/Route53/Budgets list & describe actions have no resource-level ARN support; all actions here are read-only
+        Sid    = "ServiceRead"
+        Effect = "Allow"
+        Action = [
           "cloudfront:Get*",
           "cloudfront:List*",
           "acm:Describe*",
