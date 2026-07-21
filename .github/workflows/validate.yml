@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [main]
 
+# Read-only: both jobs just check out and scan; nothing needs write access.
+permissions:
+  contents: read
+
 jobs:
   terraform:
     name: Terraform Validate
@@ -37,4 +41,5 @@ jobs:
       - name: Run Checkov
         run: |
           docker run --rm -v "${{ github.workspace }}/terraform:/tf" \
-            bridgecrew/checkov:3.3.8 --directory /tf --framework terraform --quiet --compact
+            bridgecrew/checkov:3.3.8@sha256:c64ffb6d6fc8087c896341a2c697770a04a1cf558db04fa7b8129d8ca6bce336 \
+            --directory /tf --framework terraform --quiet --compact
