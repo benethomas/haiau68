@@ -24,13 +24,15 @@ Terraform · AWS (S3, CloudFront, ACM, Route53) · GitHub Actions · OIDC
 │   ├── workflows/
 │   │   ├── deploy-infra.yml   # runs on terraform/ changes
 │   │   ├── deploy-site.yml    # runs on website/ changes
-│   │   └── validate.yml       # fmt + validate + Checkov scan on PRs
+│   │   ├── validate.yml       # fmt + validate + Checkov scan on PRs
+│   │   └── infracost.yml      # cost-estimate comment on PRs
 │   └── dependabot.yml         # weekly dependency updates
 ├── terraform/
 │   ├── environments/dev/   # dev.haiau68.com
 │   ├── environments/prod/  # haiau68.com
 │   ├── global/             # OIDC provider + IAM roles
 │   └── modules/static-website/
+├── infracost.yml           # Infracost project config (dev + prod)
 └── website/
 ```
 
