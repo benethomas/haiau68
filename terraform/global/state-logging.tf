@@ -5,6 +5,7 @@ resource "aws_s3_bucket" "state_logs" {
   #checkov:skip=CKV_AWS_144:Cross-region replication unnecessary for 30-day-retained access logs
   #checkov:skip=CKV2_AWS_62:No event-notification consumer for this bucket
   bucket = "haiau68-terraform-state-logs-128104558019"
+  tags   = local.common_tags
 }
 
 resource "aws_s3_bucket_logging" "terraform_state" {

@@ -1,0 +1,27 @@
+metadata:
+  id: "CKV_HAIAU68_1"
+  name: "Taggable resources must carry Service and a valid Environment tag"
+  category: "CONVENTION"
+definition:
+  and:
+    - cond_type: attribute
+      resource_types:
+        - aws_s3_bucket
+        - aws_cloudfront_distribution
+        - aws_acm_certificate
+        - aws_iam_role
+      attribute: "tags.Service"
+      operator: "exists"
+    - cond_type: attribute
+      resource_types:
+        - aws_s3_bucket
+        - aws_cloudfront_distribution
+        - aws_acm_certificate
+        - aws_iam_role
+      attribute: "tags.Environment"
+      operator: "within"
+      value:
+        - "Dev"
+        - "Stage"
+        - "Prod"
+        - "Shared"

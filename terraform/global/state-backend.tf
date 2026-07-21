@@ -12,6 +12,7 @@ resource "aws_s3_bucket" "terraform_state" {
   #checkov:skip=CKV_AWS_144:Cross-region replication unnecessary for a solo project's state
   #checkov:skip=CKV2_AWS_62:No event-notification consumer for this bucket
   bucket = "haiau68-terraform-state-128104558019"
+  tags   = local.common_tags
 }
 
 resource "aws_s3_bucket_versioning" "terraform_state" {
