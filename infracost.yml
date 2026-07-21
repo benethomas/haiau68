@@ -1,0 +1,10 @@
+version: 0.1
+
+# Only the deployed environments carry meaningful cost. The global stack
+# (IAM, state bucket, budget) and the module (not deployed directly) are
+# excluded.
+projects:
+  - path: terraform/environments/dev
+    name: dev
+  - path: terraform/environments/prod
+    name: prod

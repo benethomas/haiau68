@@ -1,0 +1,56 @@
+name: Infracost
+
+on:
+  pull_request:
+    branches: [main]
+
+# Informational only — posts a cost-diff comment, never blocks the merge.
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  infracost:
+    name: Infracost Cost Estimate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Infracost
+        uses: infracost/actions/setup@fb736a8f219195d6efdca58682069b16fe1bc280 # v4.2.0
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+
+      # Baseline: cost of the target branch (main) before this PR.
+      - name: Checkout base branch
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+
+      - name: Generate baseline
+        run: |
+          # infracost.yml won't exist on main until this PR merges, so the
+          # first run has no baseline — degrade to an empty one gracefully.
+          if [ -f infracost.yml ]; then
+            infracost breakdown --config-file infracost.yml \
+              --format json --out-file /tmp/infracost-base.json
+          else
+            echo "No infracost.yml on base branch yet (first run) — empty baseline"
+            echo '{"version":"0.2","projects":[]}' > /tmp/infracost-base.json
+          fi
+
+      # PR branch: cost with this PR's changes.
+      - name: Checkout PR branch
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Generate diff against baseline
+        run: |
+          infracost diff --config-file infracost.yml \
+            --compare-to /tmp/infracost-base.json \
+            --format json --out-file /tmp/infracost.json
+
+      - name: Post/update PR comment
+        run: |
+          infracost comment github --path /tmp/infracost.json \
+            --repo "$GITHUB_REPOSITORY" \
+            --pull-request "${{ github.event.pull_request.number }}" \
+            --github-token "${{ github.token }}" \
+            --behavior update
